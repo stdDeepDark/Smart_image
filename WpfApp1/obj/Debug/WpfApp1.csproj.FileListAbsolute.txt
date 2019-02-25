@@ -1,0 +1,15 @@
+C:\Users\admin\Desktop\创新杯\WpfApp1\WpfApp1\obj\Debug\MainWindow.g.cs
+C:\Users\admin\Desktop\创新杯\WpfApp1\WpfApp1\obj\Debug\App.g.cs
+C:\Users\admin\Desktop\创新杯\WpfApp1\WpfApp1\obj\Debug\MainWindow.baml
+C:\Users\admin\Desktop\创新杯\WpfApp1\WpfApp1\obj\Debug\WpfApp1.csproj.GenerateResource.cache
+C:\Users\admin\Desktop\创新杯\WpfApp1\WpfApp1\obj\Debug\WpfApp1.csproj.CoreCompileInputs.cache
+C:\Users\admin\Desktop\创新杯\WpfApp1\WpfApp1\bin\Debug\SmartImage.exe.config
+C:\Users\admin\Desktop\创新杯\WpfApp1\WpfApp1\bin\Debug\SmartImage.exe
+C:\Users\admin\Desktop\创新杯\WpfApp1\WpfApp1\bin\Debug\SmartImage.pdb
+C:\Users\admin\Desktop\创新杯\WpfApp1\WpfApp1\obj\Debug\SmartImage_MarkupCompile.cache
+C:\Users\admin\Desktop\创新杯\WpfApp1\WpfApp1\obj\Debug\SmartImage_MarkupCompile.lref
+C:\Users\admin\Desktop\创新杯\WpfApp1\WpfApp1\obj\Debug\SmartImage.g.resources
+C:\Users\admin\Desktop\创新杯\WpfApp1\WpfApp1\obj\Debug\SmartImage.Properties.Resources.resources
+C:\Users\admin\Desktop\创新杯\WpfApp1\WpfApp1\obj\Debug\SmartImage.exe
+C:\Users\admin\Desktop\创新杯\WpfApp1\WpfApp1\obj\Debug\SmartImage.pdb
+C:\Users\admin\Desktop\创新杯\WpfApp1\WpfApp1\obj\Debug\WpfApp1.csprojAssemblyReference.cache
