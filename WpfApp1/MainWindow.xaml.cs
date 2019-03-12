@@ -75,6 +75,7 @@ internal enum WindowCompositionAttribute
         FileStream imgFS;
         InfoLabel infoLabel;
         string filename;
+        public static MainWindow themainWindow;
         bool hasLabel = false;
         int endOfJpg,start,end;
         byte[] srcbyte;
@@ -87,9 +88,19 @@ internal enum WindowCompositionAttribute
         public MainWindow()
         {
             InitializeComponent();
-            
+            themainWindow = this;
             editMode = false;
-            Grid_tool.Visibility = Visibility.Hidden;
+            button_newlabel.Visibility = Visibility.Hidden;
+            button_save.Visibility = Visibility.Hidden;
+            button_delete.Visibility = Visibility.Hidden;
+            label_fontColore.Visibility = Visibility.Hidden;
+            FontColor_ComboBox.Visibility = Visibility.Hidden;
+            label_fontFamily.Visibility = Visibility.Hidden;
+            fontFamily_ComboBox.Visibility = Visibility.Hidden;
+            label_fontSize.Visibility = Visibility.Hidden;
+            fontSize_textBox.Visibility = Visibility.Hidden;
+            label_borderColor.Visibility = Visibility.Hidden;
+            BorderColor_ComboBox.Visibility = Visibility.Hidden;
             mode_button.Content = "编辑模式";
             double ScreenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;//WPF
             double ScreenHeight = SystemParameters.PrimaryScreenHeight;
@@ -97,7 +108,6 @@ internal enum WindowCompositionAttribute
                 this.Width = ScreenWidth-50;
             if (this.Height >= ScreenHeight)
                 this.Height = ScreenHeight-100;
-
 
             Grid1.MouseLeftButtonUp += new MouseButtonEventHandler(Grid1_MouseLeftButtonUp);
             Grid1.MouseLeftButtonDown += new MouseButtonEventHandler(Grid1_MouseLeftButtonDown);
@@ -111,11 +121,11 @@ internal enum WindowCompositionAttribute
             fontSize_textBox.TextChanged += new TextChangedEventHandler(fontSize_TextChanged);
             Type type = typeof(System.Windows.Media.Brushes);
             System.Reflection.PropertyInfo[] info = type.GetProperties();
-            foreach (System.Reflection.PropertyInfo pi in info)
-            {
-                FontColor_ComboBox.Items.Add(pi.Name);
-                BorderColor_ComboBox.Items.Add(pi.Name);
-            }
+           // foreach (System.Reflection.PropertyInfo pi in info)
+            //{
+               // FontColor_ComboBox.Items.Add(pi.Name);
+             //   BorderColor_ComboBox.Items.Add(pi.Name);
+           // }
             FontColor_ComboBox.SelectionChanged += new SelectionChangedEventHandler(fontColor_SelectionChanged);
             BorderColor_ComboBox.SelectionChanged += new SelectionChangedEventHandler(borderColor_SelectionChanged);
             ColorDialog ColorForm = new ColorDialog();
@@ -191,23 +201,27 @@ internal enum WindowCompositionAttribute
 
         void borderColor_SelectionChanged(object sender, System.EventArgs e)
         {
+           
             if (infoLabels != null)
                 foreach (InfoLabel i in infoLabels)
                     if (i.isSelected)
                     {
-                        i.borderColor = BorderColor_ComboBox.SelectedValue.ToString();
-                        i.border.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(i.borderColor));
+                        i.borderColor = BorderColor_ComboBox.SelectedValue.ToString().Substring(BorderColor_ComboBox.SelectedValue.ToString().IndexOf(' ') + 1);
+                        Color color = (Color)ColorConverter.ConvertFromString(i.borderColor);
+                        i.border.BorderBrush = new SolidColorBrush(color);
                     }
         }
 
         void fontColor_SelectionChanged(object sender, System.EventArgs e)
         {
+
             if (infoLabels != null)
                 foreach (InfoLabel i in infoLabels)
                     if (i.isSelected)
                     {
-                        i.fontColor = FontColor_ComboBox.SelectedValue.ToString();
-                        i.label.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(i.fontColor));
+                        i.fontColor = FontColor_ComboBox.SelectedValue.ToString().Substring(FontColor_ComboBox.SelectedValue.ToString().IndexOf(' ')+1);
+                        Color color = (Color)ColorConverter.ConvertFromString(i.fontColor);
+                        i.label.Foreground = new SolidColorBrush(color);
                     }
         }
         void fontSize_TextChanged(object sender, System.EventArgs e)
@@ -276,8 +290,24 @@ internal enum WindowCompositionAttribute
                         flag1 = false;
                         fontFamily_ComboBox.Text = i.label.FontFamily.ToString();
                         fontSize_textBox.Text = i.label.FontSize.ToString();
-                        FontColor_ComboBox.Text = i.fontColor;
-                        BorderColor_ComboBox.Text = i.borderColor;
+                        string fontcolor = "System.Windows.Media.Color" + " " + i.fontColor;
+                        for(int u = 0; u < FontColor_ComboBox.Items.Count; u++)
+                        {
+                            if(FontColor_ComboBox.Items[u].ToString() == fontcolor)
+                            {
+                                FontColor_ComboBox.SelectedIndex = u;
+                                break;
+                            }
+                        }
+                        string bordercolor = "System.Windows.Media.Color" + " " + i.borderColor;
+                        for (int u = 0; u < BorderColor_ComboBox.Items.Count; u++)
+                        {
+                            if (BorderColor_ComboBox.Items[u].ToString() == bordercolor)
+                            {
+                                BorderColor_ComboBox.SelectedIndex = u;
+                                break;
+                            }
+                        }
                     }
 
                 }
@@ -543,13 +573,34 @@ internal enum WindowCompositionAttribute
             {
                 editMode = false;
                 mode_button.Content = "编辑模式";
-                Grid_tool.Visibility = Visibility.Hidden;
+
+                button_newlabel.Visibility = Visibility.Hidden;
+                button_save.Visibility = Visibility.Hidden;
+                button_delete.Visibility = Visibility.Hidden;
+                label_fontColore.Visibility = Visibility.Hidden;
+                FontColor_ComboBox.Visibility = Visibility.Hidden;
+                label_fontFamily.Visibility = Visibility.Hidden;
+                fontFamily_ComboBox.Visibility = Visibility.Hidden;
+                label_fontSize.Visibility = Visibility.Hidden;
+                fontSize_textBox.Visibility = Visibility.Hidden;
+                label_borderColor.Visibility = Visibility.Hidden;
+                BorderColor_ComboBox.Visibility = Visibility.Hidden;
             }
             else
             {
                 editMode = true;
                 mode_button.Content = "查看模式";
-                Grid_tool.Visibility = Visibility.Visible;
+                button_newlabel.Visibility = Visibility.Visible;
+                button_save.Visibility = Visibility.Visible;
+                button_delete.Visibility = Visibility.Visible;
+                label_fontColore.Visibility = Visibility.Visible;
+                FontColor_ComboBox.Visibility = Visibility.Visible;
+                label_fontFamily.Visibility = Visibility.Visible;
+                fontFamily_ComboBox.Visibility = Visibility.Visible;
+                label_fontSize.Visibility = Visibility.Visible;
+                fontSize_textBox.Visibility = Visibility.Visible;
+                label_borderColor.Visibility = Visibility.Visible;
+                BorderColor_ComboBox.Visibility = Visibility.Visible;
             }
         }
 
@@ -969,8 +1020,9 @@ internal enum WindowCompositionAttribute
         public void move(int X, int Y)
         {
             this.x = Math.Max(X,10);
-           // this.x = Math.Min(x,MainWindow.wid);
+            this.x = Math.Min(x,(int)MainWindow.themainWindow.Width - 10 - this.width);
             this.y = Math.Max(Y,40);
+            this.y = Math.Min(y, (int)MainWindow.themainWindow.Height - 40 - this.height);
             label.Margin = new Thickness(x, y, 0, 0);
             border.Margin = new Thickness(x, y, 0, 0);
             textBox.Margin = new Thickness(x, y, 0, 0);

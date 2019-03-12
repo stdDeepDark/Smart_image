@@ -1,7 +1,7 @@
 ﻿SmartImage
 
 
-winexe
+exe
 C#
 .cs
 C:\Users\admin\Desktop\创新杯\WpfApp1\WpfApp1\obj\Release\
@@ -16,5 +16,5 @@ C:\Users\admin\Desktop\创新杯\WpfApp1\WpfApp1\App.xaml
 151984215308
 MainWindow.xaml;
 
-False
+True
 
