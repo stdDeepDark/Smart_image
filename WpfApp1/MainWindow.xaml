@@ -9,7 +9,13 @@
         Title="SmartImage" Height="800" Width="1400" WindowStartupLocation="CenterScreen" Background="#727A7A7A" AllowsTransparency="True" WindowStyle="None">
 
     <Grid x:Name="Grid" Background="#00000000">
-        <Grid x:Name="Grid2" Background="#00000000" Margin="0,0,0,0" Height="30" VerticalAlignment="Top"  MouseLeftButtonDown="Window_MouseDown"/>
+        <Grid x:Name="Grid2" Background="#00000000" Margin="0,0,0,0" Height="30" VerticalAlignment="Top"  MouseLeftButtonDown="Window_MouseDown">
+            <Label x:Name="title" Content="Smart Image" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16">
+                <Label.Foreground>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.WindowColorKey}}"/>
+                </Label.Foreground>
+            </Label>
+        </Grid>
         <Button Content="" Width="30" Height="30" VerticalAlignment="Top" HorizontalAlignment="Right" RenderTransformOrigin="4.368,0.624" Margin="0" Click="Button_Click_4">
             <Button.Background>
                 <ImageBrush ImageSource="close.png"/>
@@ -20,20 +26,81 @@
             <Border BorderBrush="#19000000" BorderThickness="1" Margin="10,40,10,10">
                 <Image x:Name="main_image" Margin="0,0,0,0" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Border>
-            <ToolBar x:Name="toolBar1" Height="30" Margin="0,0,0,0" VerticalAlignment="Top" Background="#33EEF5FD" >
-                <Button x:Name="mode_button" Content="编辑模式" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100"  Height="30" BorderThickness="0" Background="#19FFFFFF" Foreground="White" FontWeight="Bold" Click="mode_button_Click"/>
-                <Button x:Name="button1" Content="选择图片" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100" Click="button1_Click" Height="30" BorderThickness="0" Background="#19FFFFFF" Foreground="White" FontWeight="Bold"/>
+            <ToolBar x:Name="toolBar1" Height="30" Margin="0,0,0,0" VerticalAlignment="Top" Background="#33FFFFFF" >
+                <Button x:Name="mode_button" Content="编辑模式" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100"  Height="30" BorderThickness="0,0,1,0" Background="#4C000000" Click="mode_button_Click" FontSize="14" BorderBrush="#19FFFFFF">
+                    <Button.Foreground>
+                        <SolidColorBrush Color="White"/>
+                    </Button.Foreground>
+                </Button>
+                <Button x:Name="button1" Content="选择图片" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100" Click="button1_Click" Height="30" BorderThickness="0,0,1,0" Background="#4C000000" FontSize="14" BorderBrush="#19FFFFFF">
+                    <Button.Foreground>
+                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.WindowColorKey}}"/>
+                    </Button.Foreground>
+                </Button>
                 <Grid x:Name="Grid_tool" VerticalAlignment="Top">
-                    <Button Content="新建文本框" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100" Click="Button_Click" Height="30" BorderThickness="0" Background="#19FFFFFF" Foreground="White" FontWeight="Bold"/>
-                    <Button Content="显示所有文本框" Margin="100,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100" Click="Button_Click_1" Height="30" BorderThickness="0" Background="#19FFFFFF" Foreground="White" FontWeight="Bold"/>
-                    <Button Content="保存" HorizontalAlignment="Left" Margin="200,0,0,0" Height="30" VerticalAlignment="Center" Width="100" Click="Button_Click_2" BorderThickness="0" Background="#19FFFFFF" Foreground="White" FontWeight="Bold"/>
-                    <Button Content="删除文本框" Width="100" Height="30" Margin="300,0,0,0" Click="Button_Click_3" BorderThickness="0" Background="#19FFFFFF" Foreground="White" HorizontalAlignment="Left" FontWeight="Bold"/>
-                    <Label Content="字体颜色" Height="30" VerticalAlignment="Center" Margin="400,0,0,0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="#19FFFFFF" Foreground="White" FontWeight="Bold"/>
-                    <ComboBox x:Name="FontColor_ComboBox" Height="30" Margin="480,0,0,0" VerticalAlignment="Center" Width="120" RenderTransformOrigin="0.863,0.615" BorderBrush="#FFEEF5FD" Background="#19FFFFFF" Foreground="White" HorizontalAlignment="Left" BorderThickness="0" VerticalContentAlignment="Center" FontWeight="Bold"/>
-                    <Label Content="字体" Height="30" VerticalAlignment="Center" Margin="600,0,0,0" Width="50" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#19FFFFFF" Foreground="White" FontWeight="Bold"/>
-                    <ComboBox x:Name="fontFamily_ComboBox" Height="30" Margin="650,0,0,0" VerticalAlignment="Center" Width="120" BorderBrush="#FFEEF5FD" Background="#19FFFFFF" Foreground="White" BorderThickness="0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontWeight="Bold"/>
-                    <Label Content="字号" Height="30" VerticalAlignment="Center" Margin="770,0,0,0" Width="50" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#19FFFFFF" Foreground="White" FontWeight="Bold"/>
-                    <TextBox x:Name="fontSize_textBox" Height="30" Margin="820,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="120" AutomationProperties.ItemType="double" RenderTransformOrigin="2.343,0.538" BorderBrush="#FFEEF5FD" Background="#19FFFFFF" Foreground="White" BorderThickness="0" HorizontalAlignment="Left" VerticalContentAlignment="Center" SelectionBrush="LightSkyBlue" FontWeight="Bold"/>
+                    <Button Content="新建文本框" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100" Click="Button_Click" Height="30" BorderThickness="0,0,1,0" Background="#4C000000" FontSize="14" BorderBrush="#19FFFFFF">
+                        <Button.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.WindowColorKey}}"/>
+                        </Button.Foreground>
+                    </Button>
+                    <Button Content="显示所有文本框" Margin="100,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="120" Click="Button_Click_1" Height="30" BorderThickness="0,0,1,0" Background="#4C000000" FontSize="14" BorderBrush="#19FFFFFF">
+                        <Button.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.WindowColorKey}}"/>
+                        </Button.Foreground>
+                    </Button>
+                    <Button Content="保存" HorizontalAlignment="Left" Margin="220,0,0,0" Height="30" VerticalAlignment="Center" Width="80" Click="Button_Click_2" BorderThickness="0,0,1,0" Background="#4C000000" FontSize="14" BorderBrush="#19FFFFFF">
+                        <Button.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.WindowColorKey}}"/>
+                        </Button.Foreground>
+                    </Button>
+                    <Button Content="删除文本框" Width="100" Height="30" Margin="300,0,0,0" Click="Button_Click_3" BorderThickness="0,0,1,0" Background="#4C000000" HorizontalAlignment="Left" FontSize="14" VerticalAlignment="Center" BorderBrush="#19FFFFFF">
+                        <Button.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.WindowColorKey}}"/>
+                        </Button.Foreground>
+                    </Button>
+                    <Label Content="字体颜色" Height="30" VerticalAlignment="Center" Margin="400,0,0,0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="#4C000000" FontSize="14" BorderBrush="#19FFFFFF" BorderThickness="0,0,1,0">
+                        <Label.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.WindowColorKey}}"/>
+                        </Label.Foreground>
+                    </Label>
+                    <ComboBox x:Name="FontColor_ComboBox" Height="30" Margin="480,0,0,0" VerticalAlignment="Center" Width="120" RenderTransformOrigin="0.863,0.615" BorderBrush="#19FFFFFF" Background="#19FFFFFF" HorizontalAlignment="Left" BorderThickness="0,0,1,0" VerticalContentAlignment="Center" FontSize="14">
+                        <ComboBox.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}"/>
+                        </ComboBox.Foreground>
+                    </ComboBox>
+                    <Label Content="字体" Height="30" VerticalAlignment="Center" Margin="600,0,0,0" Width="50" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#4C000000" FontSize="14" BorderBrush="#19FFFFFF" BorderThickness="0,0,1,0">
+                        <Label.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.WindowColorKey}}"/>
+                        </Label.Foreground>
+                    </Label>
+                    <ComboBox x:Name="fontFamily_ComboBox" Height="30" Margin="650,0,0,0" VerticalAlignment="Center" Width="120" BorderBrush="#19FFFFFF" Background="#19FFFFFF" BorderThickness="0,0,1,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="14">
+                        <ComboBox.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}"/>
+                        </ComboBox.Foreground>
+                    </ComboBox>
+                    <Label Content="字号" Height="30" VerticalAlignment="Center" Margin="770,0,0,0" Width="50" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#4C000000" FontSize="14" BorderBrush="#19FFFFFF" BorderThickness="0,0,1,0">
+                        <Label.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.WindowColorKey}}"/>
+                        </Label.Foreground>
+                    </Label>
+                    <TextBox x:Name="fontSize_textBox" Height="30" Margin="820,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="60" AutomationProperties.ItemType="double" RenderTransformOrigin="2.343,0.538" BorderBrush="#19FFFFFF" BorderThickness="0,0,1,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" SelectionBrush="LightSkyBlue" FontSize="14">
+                        <TextBox.Background>
+                            <SolidColorBrush Color="#CCFFFFFF"/>
+                        </TextBox.Background>
+                        <TextBox.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}"/>
+                        </TextBox.Foreground>
+                    </TextBox>
+                    <Label Content="边框颜色" Height="30" VerticalAlignment="Center" Margin="880,0,0,0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="#4C000000" FontSize="14" BorderBrush="#19FFFFFF" BorderThickness="0,0,1,0">
+                        <Label.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.WindowColorKey}}"/>
+                        </Label.Foreground>
+                    </Label>
+                    <ComboBox x:Name="BorderColor_ComboBox" Height="30" Margin="960,0,0,0" VerticalAlignment="Center" Width="120" RenderTransformOrigin="0.863,0.615" BorderBrush="#19FFFFFF" Background="#19FFFFFF" HorizontalAlignment="Left" BorderThickness="0,0,1,0" VerticalContentAlignment="Center" FontSize="14">
+                        <ComboBox.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}"/>
+                        </ComboBox.Foreground>
+                    </ComboBox>
                 </Grid>
             </ToolBar>
         </Grid>

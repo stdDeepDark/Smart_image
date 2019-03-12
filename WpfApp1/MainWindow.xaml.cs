@@ -87,6 +87,7 @@ internal enum WindowCompositionAttribute
         public MainWindow()
         {
             InitializeComponent();
+            
             editMode = false;
             Grid_tool.Visibility = Visibility.Hidden;
             mode_button.Content = "编辑模式";
@@ -113,9 +114,18 @@ internal enum WindowCompositionAttribute
             foreach (System.Reflection.PropertyInfo pi in info)
             {
                 FontColor_ComboBox.Items.Add(pi.Name);
+                BorderColor_ComboBox.Items.Add(pi.Name);
             }
             FontColor_ComboBox.SelectionChanged += new SelectionChangedEventHandler(fontColor_SelectionChanged);
-            if(App.file != null)
+            BorderColor_ComboBox.SelectionChanged += new SelectionChangedEventHandler(borderColor_SelectionChanged);
+            ColorDialog ColorForm = new ColorDialog();
+           // if (ColorForm.ShowDialog() == DialogResult.OK)
+            {
+                //Color GetColor = ColorForm.Color;
+                //GetColor就是用户选择的颜色，接下来就可以使用该颜色了
+                // button2.BackColor = GetColor;
+            }
+            if (App.file != null)
             {
                 filename = App.file;
                 imgFS = new FileStream(filename, FileMode.Open);
@@ -135,7 +145,8 @@ internal enum WindowCompositionAttribute
                     main_image.Stretch = Stretch.Uniform;
                 }
                 main_image.Source = img;
-
+               
+                title.Content = "Smart Image - " + filename.Substring(filename.LastIndexOf('\\')+1);
                 Thread thread = new Thread(getImageInfo);
                 thread.Start();
             }
@@ -178,7 +189,16 @@ internal enum WindowCompositionAttribute
 
 
 
-
+        void borderColor_SelectionChanged(object sender, System.EventArgs e)
+        {
+            if (infoLabels != null)
+                foreach (InfoLabel i in infoLabels)
+                    if (i.isSelected)
+                    {
+                        i.borderColor = BorderColor_ComboBox.SelectedValue.ToString();
+                        i.border.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(i.borderColor));
+                    }
+        }
 
         void fontColor_SelectionChanged(object sender, System.EventArgs e)
         {
@@ -186,8 +206,8 @@ internal enum WindowCompositionAttribute
                 foreach (InfoLabel i in infoLabels)
                     if (i.isSelected)
                     {
-                        i.colorName = FontColor_ComboBox.SelectedValue.ToString();
-                        i.label.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(FontColor_ComboBox.SelectedValue.ToString()));
+                        i.fontColor = FontColor_ComboBox.SelectedValue.ToString();
+                        i.label.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(i.fontColor));
                     }
         }
         void fontSize_TextChanged(object sender, System.EventArgs e)
@@ -256,7 +276,8 @@ internal enum WindowCompositionAttribute
                         flag1 = false;
                         fontFamily_ComboBox.Text = i.label.FontFamily.ToString();
                         fontSize_textBox.Text = i.label.FontSize.ToString();
-                        FontColor_ComboBox.Text = i.colorName;
+                        FontColor_ComboBox.Text = i.fontColor;
+                        BorderColor_ComboBox.Text = i.borderColor;
                     }
 
                 }
@@ -265,11 +286,12 @@ internal enum WindowCompositionAttribute
                 fontFamily_ComboBox.Text = "";
                 fontSize_textBox.Text = "";
                 FontColor_ComboBox.Text = "";
+                BorderColor_ComboBox.Text = "";
             }
             if (isNewLabel)
             {
                 Point point = Mouse.GetPosition(Grid1);
-                infoLabel = new InfoLabel((int)point.X,(int)point.Y, 10, 10, "双击输入文本", 10, "Black", new FontFamily("Microsoft YaHei UI"));
+                infoLabel = new InfoLabel((int)point.X,(int)point.Y, 10, 10, "双击输入文本", 10, "Black", new FontFamily("Microsoft YaHei UI"), "Black");
                 Grid1.Children.Add(infoLabel.label);
                 Grid1.Children.Add(infoLabel.border);
                 Grid1.Children.Add(infoLabel.textBox);
@@ -301,6 +323,8 @@ internal enum WindowCompositionAttribute
             {
                 if(i.adjustTimer.Enabled == true)
                     i.adjust_MouseLeftButtonUp(sender,e);
+                if (i.moveTimer.Enabled == true)
+                    i.stopmove_MouseLeftButtonUp(sender, e);
             }
         }
         private void button1_Click(object sender, RoutedEventArgs e)
@@ -330,6 +354,7 @@ internal enum WindowCompositionAttribute
                 }
                 main_image.Source = img;
 
+                title.Content = "Smart Image - " + filename.Substring(filename.LastIndexOf('\\')+1);
                 Thread thread = new Thread(getImageInfo);
                 thread.Start();
             }
@@ -406,8 +431,8 @@ internal enum WindowCompositionAttribute
             {
                 byte[] imgbyte = new byte[end - start + 1];
                 Buffer.BlockCopy(srcbyte, start, imgbyte, 0, end - start + 1);
-                int x, y, width, height, fontsize,textlen, colorlen ,fontfamilylen;
-                string text, color,fontfamily;
+                int x, y, width, height, fontsize,textlen, fontcolorlen ,fontfamilylen, bordercolorlen;
+                string text, fontcolor, fontfamily, bordercolor;
                 try
                 {
                     for (int i = 2; i < imgbyte.Length - 2; i++)
@@ -423,21 +448,24 @@ internal enum WindowCompositionAttribute
                         height = imgbyte[i + 6] * 256 + imgbyte[i + 7];
                         textlen = imgbyte[i + 8] * 256 + imgbyte[i + 9];
                         fontsize = imgbyte[i + 10] * 256 + imgbyte[i + 11];
-                        colorlen = imgbyte[i + 12];
+                        fontcolorlen = imgbyte[i + 12];
                         fontfamilylen = imgbyte[i + 13];
-                        text = Encoding.UTF8.GetString(imgbyte, i + 14, textlen);
-                        color = Encoding.UTF8.GetString(imgbyte, i + 14 + textlen, colorlen);
-                        fontfamily = Encoding.UTF8.GetString(imgbyte, i + 14 + textlen + colorlen, fontfamilylen);
+                        bordercolorlen = imgbyte[i + 14];
+                        text = Encoding.UTF8.GetString(imgbyte, i + 15, textlen);
+                        fontcolor = Encoding.UTF8.GetString(imgbyte, i + 15 + textlen, fontcolorlen);
+                        fontfamily = Encoding.UTF8.GetString(imgbyte, i + 15 + textlen + fontcolorlen, fontfamilylen);
+                        bordercolor = Encoding.UTF8.GetString(imgbyte, i + 15 + textlen + fontcolorlen + fontfamilylen, bordercolorlen);
                         Console.WriteLine(text);
-                        Console.WriteLine(color);
+                        Console.WriteLine(fontcolor);
                         Console.WriteLine(fontfamily);
+                        Console.WriteLine(bordercolor);
 
                         //BitConverter.ToString(imgbyte, i+10, len);
                         this.Dispatcher.Invoke(new MethodInvoker(delegate
                         {
-                            infoLabels.Add(new InfoLabel(x, y, width, height, text, fontsize, color, new FontFamily(fontfamily)));
+                            infoLabels.Add(new InfoLabel(x, y, width, height, text, fontsize, fontcolor, new FontFamily(fontfamily), bordercolor));
                         }));
-                        i += 13 + textlen + colorlen + fontfamilylen;
+                        i += 14 + textlen + fontcolorlen + fontfamilylen + bordercolorlen;
                     }
                     Grid1.Dispatcher.Invoke(new MethodInvoker(delegate
                     {
@@ -537,7 +565,7 @@ internal enum WindowCompositionAttribute
                     {
                         List<byte> bytes = new List<byte>();
                         byte[] midbytes = new byte[start];
-                        byte[] midbytes2, midbytes3;
+                        byte[] midbytes2, midbytes3 , midbytes4;
                         Buffer.BlockCopy(srcbyte, 0, midbytes, 0, start);
                         bytes.AddRange(midbytes);
                         bytes.Add(0xff);
@@ -558,13 +586,15 @@ internal enum WindowCompositionAttribute
                             bytes.Add(BitConverter.GetBytes((int)ilabel.label.FontSize)[1]);
                             bytes.Add(BitConverter.GetBytes((int)ilabel.label.FontSize)[0]);
                      
-                            midbytes2 = System.Text.Encoding.UTF8.GetBytes(ilabel.colorName);
+                            midbytes2 = System.Text.Encoding.UTF8.GetBytes(ilabel.fontColor);
                             bytes.Add(BitConverter.GetBytes(midbytes2.Length)[0]);
-                            Console.WriteLine(BitConverter.GetBytes(midbytes2.Length)[0] + "\n" + ilabel.colorName);
+                            Console.WriteLine(BitConverter.GetBytes(midbytes2.Length)[0] + "\n" + ilabel.fontColor);
                             midbytes3 = System.Text.Encoding.UTF8.GetBytes(ilabel.label.FontFamily.ToString());
                             bytes.Add(BitConverter.GetBytes(midbytes3.Length)[0]);
-
                             Console.WriteLine(BitConverter.GetBytes(midbytes3.Length)[0] + "\n" + ilabel.label.FontFamily.ToString());
+                            midbytes4 = System.Text.Encoding.UTF8.GetBytes(ilabel.borderColor);
+                            bytes.Add(BitConverter.GetBytes(midbytes4.Length)[0]);
+                            Console.WriteLine(BitConverter.GetBytes(midbytes4.Length)[0] + "\n" + ilabel.borderColor);
 
                             for (int i = 0; i < midbytes.Length; i++)
                                 bytes.Add(midbytes[i]);
@@ -574,6 +604,8 @@ internal enum WindowCompositionAttribute
 
                             for (int i = 0; i < midbytes3.Length; i++)
                                 bytes.Add(midbytes3[i]);
+                            for (int i = 0; i < midbytes4.Length; i++)
+                                bytes.Add(midbytes4[i]);
                         }
                         bytes.Add(0xff);
                         bytes.Add(0xed);
@@ -589,7 +621,7 @@ internal enum WindowCompositionAttribute
                     else
                     {
                         List<byte> bytes = new List<byte>();
-                        byte[] midbytes2, midbytes3;
+                        byte[] midbytes2, midbytes3, midbytes4;
                         bytes.Add(0xff);
                         bytes.Add(0xaa);
 
@@ -610,13 +642,15 @@ internal enum WindowCompositionAttribute
                             bytes.Add(BitConverter.GetBytes((int)ilabel.label.FontSize)[1]);
                             bytes.Add(BitConverter.GetBytes((int)ilabel.label.FontSize)[0]);
 
-                            midbytes2 = System.Text.Encoding.UTF8.GetBytes(ilabel.colorName);
+                            midbytes2 = System.Text.Encoding.UTF8.GetBytes(ilabel.fontColor);
                             bytes.Add(BitConverter.GetBytes(midbytes2.Length)[0]);
                             midbytes3 = System.Text.Encoding.UTF8.GetBytes(ilabel.label.FontFamily.ToString());
                             bytes.Add(BitConverter.GetBytes(midbytes3.Length)[0]);
-
-                            Console.WriteLine(BitConverter.GetBytes(midbytes2.Length)[0] + "\n" + ilabel.colorName);
+                            midbytes4 = System.Text.Encoding.UTF8.GetBytes(ilabel.borderColor);
+                            bytes.Add(BitConverter.GetBytes(midbytes4.Length)[0]);
+                            Console.WriteLine(BitConverter.GetBytes(midbytes2.Length)[0] + "\n" + ilabel.fontColor);
                             Console.WriteLine(BitConverter.GetBytes(midbytes3.Length)[0] + "\n" + ilabel.label.FontFamily.ToString());
+                            Console.WriteLine(BitConverter.GetBytes(midbytes4.Length)[0] + "\n" + ilabel.borderColor);
                             for (int i = 0; i < midbytes.Length; i++)
                                 bytes.Add(midbytes[i]);
 
@@ -625,7 +659,9 @@ internal enum WindowCompositionAttribute
 
                             for (int i = 0; i < midbytes3.Length; i++)
                                 bytes.Add(midbytes3[i]);
-                           
+
+                            for (int i = 0; i < midbytes4.Length; i++)
+                                bytes.Add(midbytes4[i]);
                         }
                         bytes.Add(0xff);
                         bytes.Add(0xed);
@@ -661,7 +697,9 @@ internal enum WindowCompositionAttribute
         public bool typingleave = true;
         public bool isdisappear = true;
         public bool isSelected = false;
-        public string colorName;
+        static public bool onlyone = false;
+        public string fontColor;
+        public string borderColor;
         public System.Windows.Controls.Label label;
         public Border border;
         public System.Windows.Controls.TextBox textBox;
@@ -673,7 +711,7 @@ internal enum WindowCompositionAttribute
         public string text { get; set; }
         enum Dir{up,upright,right,downright,down,downleft,left,upleft};
         Dir dir;
-        public InfoLabel(int X, int Y, int Width, int Height, string Text,double fontSize ,string ColorName, FontFamily fontFamily)
+        public InfoLabel(int X, int Y, int Width, int Height, string Text,double fontSize ,string fontColorName, FontFamily fontFamily, string borderColorName)
         {
             label = new System.Windows.Controls.Label();
 
@@ -686,10 +724,10 @@ internal enum WindowCompositionAttribute
             this.height = Height;
             this.width = Width;
             this.text = Text;
-            this.colorName = ColorName;
+            this.fontColor = fontColorName;
             try
             {
-                label.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(colorName));
+                label.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(fontColor));
             }
             catch
             {
@@ -713,8 +751,15 @@ internal enum WindowCompositionAttribute
             textBox.Height = height;
             textBox.Text = Text;
             textBox.Visibility = Visibility.Hidden;
-
-            border.BorderBrush = new SolidColorBrush(Colors.Blue);
+            this.borderColor = borderColorName;
+            try
+            {
+                border.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(borderColor));   
+            }
+            catch
+            {
+                MainWindow.error(0);
+            }
             border.Opacity = 1;
             border.BorderThickness = new Thickness(1);
 
@@ -923,8 +968,9 @@ internal enum WindowCompositionAttribute
         }
         public void move(int X, int Y)
         {
-            this.x = X;
-            this.y = Y;
+            this.x = Math.Max(X,10);
+           // this.x = Math.Min(x,MainWindow.wid);
+            this.y = Math.Max(Y,40);
             label.Margin = new Thickness(x, y, 0, 0);
             border.Margin = new Thickness(x, y, 0, 0);
             textBox.Margin = new Thickness(x, y, 0, 0);
@@ -933,6 +979,10 @@ internal enum WindowCompositionAttribute
         {
             if (!MainWindow.editMode)
                 return;
+            if (onlyone)
+                return;
+            else
+                onlyone = true;
             isSelected = true;
             if (textBox.Visibility == Visibility.Visible)
                 return;
@@ -955,10 +1005,11 @@ internal enum WindowCompositionAttribute
             move(x + (int)p.X - width/2, y + (int)p.Y - height/2);
         }
         //void 
-        private void stopmove_MouseLeftButtonUp(object sender, System.EventArgs e)
+        public void stopmove_MouseLeftButtonUp(object sender, System.EventArgs e)
         {
             if(moveTimer != null)
                 moveTimer.Stop();
+            onlyone = false;
             isdisappear = true;
         }
         private void text_TextChanged(object sender, System.EventArgs e)
