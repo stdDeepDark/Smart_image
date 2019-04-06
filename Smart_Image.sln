@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp1", "WpfApp1\WpfApp1.csproj", "{2A21DB41-2D90-421C-8D61-282702118878}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart_Image", "WpfApp1\Smart_Image.csproj", "{2A21DB41-2D90-421C-8D61-282702118878}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

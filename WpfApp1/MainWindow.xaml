@@ -12,6 +12,55 @@
             ObjectInstance="{x:Type Colors}" 
             MethodName="GetProperties" 
             x:Key="colorPropertiesOdp" />
+        <Style x:Key="chkBullet" TargetType="CheckBox">
+            <Setter Property="IsChecked" Value="False"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#999"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Border Width="90" Height="25" CornerRadius="10" Background="{TemplateBinding Background}" >
+                            <Grid>
+                                <Border x:Name="border" Width="20" Height="20" CornerRadius="9" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="1 0" Background="White">
+                                    <Border.RenderTransform>
+                                        <TranslateTransform  X="0"/>
+                                    </Border.RenderTransform>
+                                </Border>
+                                <TextBlock x:Name="txt" Text="{TemplateBinding Content}" Margin="9 0" VerticalAlignment="Center" Foreground="White" >
+                                    <TextBlock.RenderTransform>
+                                        <TranslateTransform   X="18"></TranslateTransform>
+                                    </TextBlock.RenderTransform>
+                                </TextBlock>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="true">
+                                <Setter Property="Text" TargetName="txt" Value="{Binding Tag,RelativeSource={RelativeSource TemplatedParent}}"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="border" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="70" Duration="00:00:0.2"/>
+                                            <DoubleAnimation Storyboard.TargetName="txt" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="0" Duration="00:00:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="border" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="0" Duration="00:00:0.2"/>
+                                            <DoubleAnimation Storyboard.TargetName="txt" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="18" Duration="00:00:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter Property="Text" TargetName="txt" Value="{Binding Content,RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid x:Name="Grid" Background="#00000000">
         <Grid x:Name="Grid2" Background="#00000000" Margin="0,0,0,0" Height="30" VerticalAlignment="Top"  MouseLeftButtonDown="Window_MouseDown">
@@ -53,7 +102,7 @@
                         <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.WindowColorKey}}"/>
                     </Button.Foreground>
                 </Button>
-                <Button  x:Name="button_save" Content="保存" HorizontalAlignment="Left" Height="30" VerticalAlignment="Center" Width="80" Click="Button_Click_2" BorderThickness="0,0,1,0" Background="#66000000" FontSize="14" BorderBrush="#19FFFFFF">
+                <Button  x:Name="button_save" Content="保存" HorizontalAlignment="Left" Height="30" VerticalAlignment="Center" Width="60" Click="Button_Click_2" BorderThickness="0,0,1,0" Background="#66000000" FontSize="14" BorderBrush="#19FFFFFF">
                     <Button.Foreground>
                         <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.WindowColorKey}}"/>
                     </Button.Foreground>
@@ -128,7 +177,10 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+                <CheckBox Style="{StaticResource chkBullet}" Background="#5387b9" IsChecked="False" Content="背景不透明" Tag="背景透明" Height="25" x:Name="check_backTrans" Click="CheckBox_Checked"/>
             </ToolBar>
         </Grid>
     </Grid>
+    
 </Window>
+    
